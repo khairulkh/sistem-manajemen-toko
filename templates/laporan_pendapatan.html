@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center mb-4 text-uppercase">
+    <h4 class="fw-bold text-primary">LAPORAN LABA BERSIH</h4>
+    <div class="btn-group mt-2 shadow-sm">
+        <a href="?filter=semua" class="btn btn-sm btn-dark {% if filter_aktif=='semua' %}active{% endif %}">SEMUA DATA</a>
+        <a href="?filter=minggu" class="btn btn-sm btn-dark {% if filter_aktif=='minggu' %}active{% endif %}">MINGGU INI</a>
+        <a href="?filter=bulan" class="btn btn-sm btn-dark {% if filter_aktif=='bulan' %}active{% endif %}">BULAN INI</a>
+    </div>
+</div>
+
+<div class="row text-uppercase">
+    <div class="col-md-4 mb-3">
+        <div class="card p-4 text-center border-success border-start border-5 shadow-sm">
+            <h6 class="text-muted small">TOTAL OMSET</h6>
+            <h3 class="fw-bold text-success">Rp {{ "{:,.0f}".format(t_o) }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card p-4 text-center border-danger border-start border-5 shadow-sm">
+            <h6 class="text-muted small">TOTAL BIAYA</h6>
+            <h3 class="fw-bold text-danger">Rp {{ "{:,.0f}".format(t_b) }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card p-4 text-center bg-dark text-white shadow">
+            <h6 class="text-info small">LABA BERSIH ({{ filter_aktif }})</h6>
+            <h3 class="fw-bold">Rp {{ "{:,.0f}".format(laba) }}</h3>
+        </div>
+    </div>
+</div>
+{% endblock %}

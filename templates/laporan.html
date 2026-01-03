@@ -1,0 +1,73 @@
+{% extends "base.html" %} {% block content %}
+<div class="text-center mb-4 text-uppercase">
+    <div class="card bg-dark text-white p-3 border-0 shadow-sm">
+        <h6 class="mb-1" style="letter-spacing: 2px;">TOTAL KESELURUHAN STOK BARANG:</h6>
+        <h2 class="fw-bold mb-0">
+            {{ total_fisik.lusin }} LUSIN, {{ total_fisik.potong }} POTONG
+        </h2>
+    </div>
+</div>
+<div class="card p-3 mb-3 shadow-sm border-0">
+    <form method="GET" action="/laporan" class="row g-2">
+        <div class="col-md-5">
+            <input type="text" name="search" class="form-control text-uppercase" placeholder="CARI NAMA BARANG..." value="{{ search }}">
+        </div>
+        <div class="col-md-4">
+            <select name="supplier" class="form-select text-uppercase">
+                <option value="">-- SEMUA SUPPLIER --</option>
+                {% for s in all_suppliers %}
+                <option value="{{ s }}" {% if s == filter_supplier %}selected{% endif %}>{{ s }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3 d-flex gap-2">
+            <button type="submit" class="btn btn-primary w-100 fw-bold">CARI</button>
+            <a href="/laporan" class="btn btn-outline-secondary w-100 fw-bold">RESET</a>
+        </div>
+    </form>
+</div>
+
+<div class="card border-0 shadow-sm overflow-hidden">
+    <table class="table table-sm table-bordered table-hover align-middle mb-0 text-uppercase" style="font-size: 0.8rem;">
+        <thead class="table-light text-center">
+            <tr>
+                <th>TANGGAL</th>
+                <th>NAMA BARANG</th>
+                <th>LUSIN</th>
+                <th>PCS</th>
+                <th>HARGA BELI</th>
+                <th>SUPPLIER</th>
+                <th>AKSI</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in pagination.items %}
+            <tr>
+                <tr>
+                    <td class="text-center small">{{ p.tanggal_input.strftime('%d/%m/%Y') if p.tanggal_input else '-' }}</td>
+                    <td class="fw-bold ps-2">{{ p.nama }}</td>
+                    <td class="text-center">{{ p.stok_lusin }}</td>
+                    <td class="text-center">{{ p.stok_pcs }}</td>
+                    <td class="text-end pe-2">Rp {{ "{:,.0f}".format(p.harga_grosir).replace(',', '.') }}</td>
+                    <td class="text-center">{{ p.supplier }}</td>
+                    <td class="text-center">
+                        <a href="/edit/{{ p.id }}" class="btn btn-warning btn-sm fw-bold" style="font-size: 0.7rem;">EDIT</a>
+                    </td>
+                </tr>
+                {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% if pagination.pages > 1 %}
+<nav class="mt-4">
+    <ul class="pagination pagination-sm justify-content-center">
+        {% for page_num in pagination.iter_pages() %} {% if page_num %}
+        <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+            <a class="page-link" href="{{ url_for('laporan', page=page_num) }}">{{ page_num }}</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">...</span></li>
+        {% endif %} {% endfor %}
+    </ul>
+</nav>
+{% endif %} {% endblock %}

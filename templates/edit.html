@@ -1,0 +1,52 @@
+{% extends "base.html" %} {% block content %}
+<div class="card shadow border-0 mx-auto" style="max-width: 500px;">
+    <div class="card-header bg-warning text-center py-3">
+        <h4 class="mb-0 fw-bold">EDIT DATA BARANG</h4>
+    </div>
+    <div class="card-body p-4 text-uppercase">
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label fw-bold">SUPPLIER</label>
+                <select name="supplier_opt" id="supplier_opt" class="form-select" onchange="toggleCustom()">
+                    <option value="VIEWER" {% if p.supplier == 'VIEWER' %}selected{% endif %}>VIEWER</option>
+                    <option value="BOMSKY" {% if p.supplier == 'BOMSKY' %}selected{% endif %}>BOMSKY</option>
+                    <option value="Custom" {% if p.supplier not in ['VIEWER', 'BOMSKY'] %}selected{% endif %}>-- TULIS NAMA LAIN --</option>
+                </select>
+                <input type="text" name="supplier_custom" id="supplier_custom" class="form-control mt-2 {% if p.supplier in ['VIEWER', 'BOMSKY'] %}d-none{% endif %}" value="{{ p.supplier if p.supplier not in ['VIEWER', 'BOMSKY'] else '' }}" placeholder="MASUKKAN NAMA SUPPLIER">
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">NAMA BARANG</label>
+                <input type="text" name="nama" class="form-control" value="{{ p.nama }}" required>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <label class="form-label fw-bold">LS</label>
+                    <input type="number" name="lusin" class="form-control" value="{{ p.stok_lusin }}">
+                </div>
+                <div class="col">
+                    <label class="form-label fw-bold">PCS</label>
+                    <input type="number" name="pcs" class="form-control" value="{{ p.stok_pcs }}">
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="form-label fw-bold">HARGA GROSIR</label>
+                <input type="number" name="harga_grosir" class="form-control" value="{{ p.harga_grosir }}" required>
+            </div>
+            <button type="submit" class="btn btn-warning w-100 fw-bold">UPDATE DATA</button>
+        </form>
+    </div>
+</div>
+<script>
+    function toggleCustom() {
+        var select = document.getElementById("supplier_opt");
+        var customInput = document.getElementById("supplier_custom");
+        if (select.value === "Custom") {
+            customInput.classList.remove("d-none");
+            customInput.required = true;
+        } else {
+            customInput.classList.add("d-none");
+            customInput.required = false;
+        }
+    }
+</script>
+{% endblock %}

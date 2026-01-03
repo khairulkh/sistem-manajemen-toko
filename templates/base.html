@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>LUISINDO MASTER</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: sans-serif;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+        
+        .navbar {
+            background: #212529 !important;
+            border-bottom: 3px solid #ffc107;
+        }
+        
+        .nav-link {
+            color: #fff !important;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4 shadow">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-warning" href="/">LUISINDO</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">STOK</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/kasir">KASIR</a></li>
+                    <li class="nav-item"><a class="nav-link text-success" href="/rincian_penjualan">DATA JUAL</a></li>
+                    <li class="nav-item"><a class="nav-link text-danger" href="/rincian_pengeluaran">BIAYA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/laporan">ASET</a></li>
+                    <li class="nav-item"><a class="nav-link text-info" href="/laporan_pendapatan">LABA BERSIH</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold text-warning" href="/laporan_mingguan">LAPORAN MINGGUAN</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">{% block content %}{% endblock %}</div>
+</body>
+
+</html>

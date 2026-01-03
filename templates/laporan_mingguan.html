@@ -1,0 +1,157 @@
+{% extends "base.html" %} {% block content %}
+<style>
+    /* Menggunakan font Monospace agar angka sejajar rapi seperti struk */
+    
+    .report-container {
+        font-family: 'Courier New', Courier, monospace;
+        color: #333;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+    }
+    
+    .report-header {
+        border-bottom: 3px double #000;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+    }
+    
+    .table-report {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    
+    .table-report th,
+    .table-report td {
+        border: 1px solid #000;
+        padding: 8px;
+        text-transform: uppercase;
+    }
+    
+    .table-report thead {
+        background-color: #f2f2f2;
+    }
+    
+    .bg-profit {
+        background-color: #d4edda !important;
+        color: #155724;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    /* PERBAIKAN CSS PRINT */
+    
+    @media print {
+        /* Sembunyikan hanya tombol dan navigasi, BUKAN laporannya */
+        .no-print,
+        nav,
+        .navbar,
+        .btn {
+            display: none !important;
+        }
+        body {
+            background-color: white !important;
+        }
+        .container {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        .report-container {
+            box-shadow: none !important;
+            padding: 10px !important;
+            border: none !important;
+        }
+        /* Pastikan warna tabel muncul di PDF */
+        .table-report thead {
+            background-color: #f2f2f2 !important;
+            -webkit-print-color-adjust: exact;
+        }
+    }
+</style>
+
+<div class="container mt-4 mb-5">
+    <div class="report-container shadow-lg mx-auto" style="max-width: 850px;">
+        <div class="report-header text-center">
+            <h2 class="fw-bold mb-0">LUISINDO MASTER</h2>
+            <p class="mb-0 text-uppercase">Laporan Penjualan Mingguan</p>
+            <small class="text-muted text-uppercase">Periode: Minggu s/d Sabtu</small>
+        </div>
+
+        <table class="table-report text-center">
+            <thead>
+                <tr>
+                    <th rowspan="2">HARI</th>
+                    <th colspan="2">BARANG TERJUAL</th>
+                    <th rowspan="2">TOTAL (RP)</th>
+                </tr>
+                <tr>
+                    <th>LS</th>
+                    <th>PCS</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for h in laporan_hari %}
+                <tr>
+                    <td class="text-start ps-3">{{ h.hari }}</td>
+                    <td>{{ h.ls }}</td>
+                    <td>{{ h.pcs }}</td>
+                    <td class="text-end pe-3">Rp {{ "{:,.0f}".format(h.rp).replace(',', '.') }}</td>
+                </tr>
+                {% endfor %}
+                <tr class="fw-bold" style="background: #eee;">
+                    <td>TOTAL</td>
+                    <td>{{ total_ls }}</td>
+                    <td>{{ total_pcs }}</td>
+                    <td class="text-end pe-3">Rp {{ "{:,.0f}".format(total_rp).replace(',', '.') }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h6 class="fw-bold mt-4 mb-2 text-uppercase">Pengeluaran Mingguan:</h6>
+        <table class="table-report">
+            <tbody>
+                {% for e in pengeluaran %}
+                <tr>
+                    <td style="width: 70%;" class="ps-3">{{ e.nama_pengeluaran }}</td>
+                    <td class="text-end pe-3">Rp {{ "{:,.0f}".format(e.jumlah_biaya).replace(',', '.') }}</td>
+                </tr>
+                {% endfor %}
+                <tr class="fw-bold">
+                    <td class="ps-3">TOTAL PENGELUARAN</td>
+                    <td class="text-end pe-3 text-danger">Rp {{ "{:,.0f}".format(total_pengeluaran).replace(',', '.') }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="row mt-4">
+            <div class="col-7">
+                <p class="small">* Laporan ini dibuat otomatis oleh sistem LUISINDO MASTER</p>
+            </div>
+            <div class="col-5">
+                <table class="table-report fw-bold">
+                    <tr>
+                        <td>PENJUALAN</td>
+                        <td class="text-end">Rp {{ "{:,.0f}".format(total_rp).replace(',', '.') }}</td>
+                    </tr>
+                    <tr>
+                        <td>BIAYA</td>
+                        <td class="text-end text-danger">- Rp {{ "{:,.0f}".format(total_pengeluaran).replace(',', '.') }}</td>
+                    </tr>
+                    <tr class="bg-profit">
+                        <td>BERSIH</td>
+                        <td class="text-end text-success">Rp {{ "{:,.0f}".format(omzet_bersih).replace(',', '.') }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="text-center mt-4 no-print">
+            <button onclick="window.print()" class="btn btn-dark fw-bold px-5 border-warning">
+               <i class="fas fa-print"></i> CETAK LAPORAN (PDF)
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

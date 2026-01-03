@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow border-0">
+            <div class="card-header bg-primary text-white fw-bold">TAMBAH STOK BARU</div>
+            <div class="card-body p-4">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="fw-bold">NAMA PRODUK / MEREK</label>
+                        <input type="text" name="nama" class="form-control" required>
+                    </div>
+                    <div class="row">
+                        <div class="col"><label class="fw-bold">LUSIN (LS)</label><input type="number" name="lusin" class="form-control" value="0"></div>
+                        <div class="col"><label class="fw-bold">PCS</label><input type="number" name="pcs" class="form-control" value="0"></div>
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <label class="fw-bold">HARGA GROSIR (PER LUSIN)</label>
+                        <input type="number" name="harga_grosir" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="fw-bold">SUPPLIER</label>
+                        <select name="supplier_opt" id="sup_opt" class="form-select mb-2">
+                            <option value="UMUM">UMUM</option>
+                            <option value="CINA">CINA</option>
+                            <option value="JAKARTA">JAKARTA</option>
+                            <option value="Custom">TAMBAH BARU...</option>
+                        </select>
+                        <input type="text" name="supplier_custom" id="sup_custom" class="form-control d-none" placeholder="KETIK NAMA SUPPLIER BARU">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 fw-bold py-2">SIMPAN KE GUDANG</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById('sup_opt').addEventListener('change', function() {
+        var customInput = document.getElementById('sup_custom');
+        customInput.classList.toggle('d-none', this.value !== 'Custom');
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "base.html" %} {% block content %}
+<div class="card p-4 shadow-sm border-0 mx-auto" style="max-width: 600px;">
+    <h4 class="fw-bold text-primary mb-4 text-center">MENU KASIR LUISINDO</h4>
+
+    <form action="/tambah_penjualan" method="POST">
+        <div class="position-relative">
+            <label class="fw-bold small">NAMA BARANG</label>
+            <input type="text" id="cari-barang" name="nama_barang" class="form-control text-uppercase" placeholder="Ketik nama stok..." autocomplete="off" required>
+
+            <div id="rekomendasi-list" class="list-group position-absolute w-100 shadow-lg" style="z-index: 1050; display: none; max-height: 200px; overflow-y: auto;"></div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                <label class="form-label fw-bold">JUMLAH (LUSIN)</label>
+                <input type="number" name="jumlah_ls" class="form-control" value="0" min="0">
+            </div>
+            <div class="col">
+                <label class="form-label fw-bold">JUMLAH (PCS)</label>
+                <input type="number" name="jumlah_pcs" class="form-control" value="0" min="0">
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label fw-bold text-danger">TOTAL HARGA JUAL (RP)</label>
+            <input type="number" name="harga_jual" class="form-control border-danger fw-bold form-control-lg" placeholder="Contoh: 390000" required>
+            <div class="form-text text-muted">Ketik total uang yang dibayar pembeli untuk semua barang di atas.</div>
+        </div>
+
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg fw-bold">SIMPAN TRANSAKSI</button>
+            <a href="/" class="btn btn-outline-secondary">KEMBALI KE STOK</a>
+        </div>
+    </form>
+</div>
+<script>
+    const inputCari = document.getElementById('cari-barang');
+    const listRekomendasi = document.getElementById('rekomendasi-list');
+
+    inputCari.addEventListener('input', function() {
+        const query = this.value;
+        if (query.length < 2) {
+            listRekomendasi.style.display = 'none';
+            return;
+        }
+
+        fetch(`/autocomplete?q=${query}`)
+            .then(response => response.json())
+            .then(data => {
+                listRekomendasi.innerHTML = '';
+                if (data.length > 0) {
+                    data.forEach(item => {
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.classList.add('list-group-item', 'list-group-item-action', 'd-flex', 'justify-content-between', 'align-items-center');
+
+                        // Menampilkan Nama, Stok, dan Harga di rekomendasi
+                        button.innerHTML = `
+                        <div>
+                            <div class="fw-bold small">${item.nama}</div>
+                            <small class="text-muted">Stok: ${item.stok}</small>
+                        </div>
+                        <span class="badge bg-primary">Rp ${item.harga.toLocaleString('id-ID')}</span>
+                    `;
+
+                        button.onclick = function() {
+                            inputCari.value = item.nama;
+                            // Logika: Jika barang dipilih, arahkan kursor ke input JUMLAH (LUSIN)
+                            document.getElementsByName('jumlah_ls')[0].focus();
+                            listRekomendasi.style.display = 'none';
+                        };
+                        listRekomendasi.appendChild(button);
+                    });
+                    listRekomendasi.style.display = 'block';
+                } else {
+                    listRekomendasi.style.display = 'none';
+                }
+            });
+    });
+
+    // Tutup list jika klik di luar area
+    document.addEventListener('click', (e) => {
+        if (e.target !== inputCari) listRekomendasi.style.display = 'none';
+    });
+</script>
+{% endblock %}

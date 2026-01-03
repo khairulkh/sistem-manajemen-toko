@@ -1,0 +1,121 @@
+{% extends "base.html" %} {% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="fw-bold text-primary mb-0 text-uppercase">STOK GUDANG LUISINDO</h3>
+    <a href="/tambah_produk" class="btn btn-primary fw-bold shadow-sm">
+        + TAMBAH BARANG
+    </a>
+</div>
+<div class="d-flex justify-content-center align-items-center gap-3 mt-4">
+    <nav>
+        <ul class="pagination pagination-sm mb-0">
+            {% for page_num in pagination.iter_pages() %} {% if page_num %}
+            <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                <a class="page-link" href="{{ url_for('index', page=page_num, search=search, supplier=filter_supplier) }}">{{ page_num }}</a>
+            </li>
+            {% endif %} {% endfor %}
+        </ul>
+    </nav>
+
+    {% if not show_all %}
+    <a href="{{ url_for('index', all='true', search=search, supplier=filter_supplier) }}" class="btn btn-sm btn-outline-primary fw-bold">
+            TAMPILKAN SEMUA
+        </a> {% else %}
+    <a href="{{ url_for('index', all='false') }}" class="btn btn-sm btn-outline-secondary fw-bold">
+            KEMBALI KE HALAMAN
+        </a> {% endif %}
+</div>
+
+{% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %}
+<div class="alert alert-info alert-dismissible fade show fw-bold" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endfor %} {% endif %} {% endwith %}
+
+<div class="card p-3 mb-4 bg-light border-0 shadow-sm">
+    <form action="/import" method="POST" enctype="multipart/form-data" class="row g-2 align-items-center">
+        <div class="col-auto"><label class="fw-bold small">IMPORT EXCEL:</label></div>
+        <div class="col-auto">
+            <input type="file" name="file" class="form-control form-control-sm" accept=".xlsx, .xls" required>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-success btn-sm fw-bold">UNGGAH</button>
+        </div>
+    </form>
+</div>
+
+<form class="row g-2 mb-4">
+    <div class="col-md-5">
+        <input type="text" name="search" class="form-control" placeholder="CARI NAMA..." value="{{ search }}">
+    </div>
+    <div class="col-md-4">
+        <select name="supplier" class="form-select text-uppercase" onchange="this.form.submit()">
+            <option value="">-- SEMUA SUPPLIER --</option>
+            {% for s in all_suppliers %}
+            <option value="{{ s }}" {% if filter_supplier == s %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-3 d-flex gap-2">
+        <button type="submit" class="btn btn-primary w-100 fw-bold">CARI</button>
+        <a href="/" class="btn btn-outline-secondary">RESET</a>
+    </div>
+</form>
+
+<form action="/hapus_masal" method="POST">
+    <div class="mb-3">
+        <button type="submit" class="btn btn-danger btn-sm fw-bold" onclick="return confirm('Hapus data yang dipilih?')">
+            HAPUS YANG DIPILIH
+        </button>
+    </div>
+
+    <div class="card border-0 shadow-sm overflow-hidden text-uppercase">
+        <table class="table table-hover align-middle mb-0 text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th width="30"><input type="checkbox" id="select-all"></th>
+                    <th>TANGGAL</th>
+                    <th>NAMA BARANG</th>
+                    <th>SUPPLIER</th>
+                    <th>STOK</th>
+                    <th>AKSI</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in pagination.items %}
+                <tr>
+                    <td><input type="checkbox" name="produk_ids" value="{{ p.id }}" class="produk-checkbox"></td>
+                    <td class="small">{{ p.tanggal_input.strftime('%d/%m/%Y') if p.tanggal_input else '-' }}</td>
+                    <td class="text-start ps-4 fw-bold text-uppercase">{{ p.nama }}</td>
+                    <td class="text-center"><span class="badge bg-info text-dark">{{ p.supplier or '-' }}</span></td>
+                    <td class="text-center fw-bold">{{ p.stok_lusin }} LS + {{ p.stok_pcs }} PCS</td>
+                    <td class="text-center">
+                        <a href="/edit/{{ p.id }}" class="btn btn-warning btn-sm fw-bold">EDIT</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</form>
+
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% for page_num in pagination.iter_pages() %} {% if page_num %}
+        <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+            <a class="page-link" href="{{ url_for('index', page=page_num, search=search, supplier=filter_supplier) }}">{{ page_num }}</a>
+        </li>
+        {% endif %} {% endfor %}
+    </ul>
+</nav>
+
+<script>
+    // Fitur Pilih Semua
+    document.getElementById('select-all').onclick = function() {
+        var checkboxes = document.getElementsByClassName('produk-checkbox');
+        for (var checkbox of checkboxes) {
+            checkbox.checked = this.checked;
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %} {% block content %}
+<div class="card p-4 shadow-sm border-0 mx-auto" style="max-width: 500px;">
+    <h4 class="fw-bold text-primary mb-4 text-center">EDIT DATA PENJUALAN</h4>
+
+    <form action="{{ url_for('edit_penjualan', id=p.id) }}" method="POST">
+        <div class="mb-3">
+            <label class="form-label fw-bold text-success">TANGGAL & WAKTU TRANSAKSI</label>
+            <input type="datetime-local" name="tanggal_transaksi" class="form-control border-success fw-bold" value="{{ p.tanggal_transaksi.strftime('%Y-%m-%dT%H:%M') }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label fw-bold">NAMA BARANG</label>
+            <input type="text" class="form-control bg-light text-uppercase fw-bold" value="{{ p.nama_barang }}" readonly>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                <label class="form-label fw-bold">JUMLAH (LUSIN)</label>
+                <input type="number" name="jumlah_ls" class="form-control" value="{{ p.jumlah_ls }}" min="0">
+            </div>
+            <div class="col">
+                <label class="form-label fw-bold">JUMLAH (PCS)</label>
+                <input type="number" name="jumlah_pcs" class="form-control" value="{{ p.jumlah_pcs }}" min="0">
+            </div>
+        </div>
+
+        <div class="mb-4 text-uppercase">
+            <label class="form-label fw-bold text-danger">TOTAL OMSET / HARGA JUAL (RP)</label>
+            <input type="number" name="harga_jual" class="form-control border-danger fw-bold form-control-lg" value="{{ p.total_omzet }}" required>
+            <small class="text-muted">Masukkan total uang yang diterima dari pelanggan.</small>
+        </div>
+
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary fw-bold">SIMPAN PERUBAHAN</button>
+            <a href="/rincian_penjualan" class="btn btn-outline-secondary fw-bold">BATAL</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row mt-4 mb-4">
+    <div class="col-md-8">
+        <div class="card bg-dark text-white p-4 shadow border-0">
+            <h6 class="text-warning text-uppercase opacity-75">OMZET PENJUALAN</h6>
+            <h1 class="display-4 fw-bold">Rp {{ "{:,.0f}".format(total_omzet) }}</h1>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 shadow border-0">
+            <h6 class="fw-bold mb-3">FILTER WAKTU</h6>
+            <div class="btn-group-vertical w-100">
+                <a href="?filter=hari_ini" class="btn btn-outline-dark {% if filter_aktif=='hari_ini' %}active{% endif %}">Hari Ini</a>
+                <a href="?filter=minggu" class="btn btn-outline-dark {% if filter_aktif=='minggu' %}active{% endif %}">Minggu Ini</a>
+                <a href="?filter=bulan" class="btn btn-outline-dark {% if filter_aktif=='bulan' %}active{% endif %}">Bulan Ini</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow border-0">
+    <div class="card-body p-0">
+        <table class="table table-hover align-middle mb-0 text-center text-uppercase">
+            <thead class="table-dark">
+                <tr>
+                    <th style="width: 15%;">Waktu</th>
+                    <th class="text-start ps-4">Produk</th>
+                    <th style="width: 20%;">Jumlah</th>
+                    <th style="width: 20%;">Harga Jual</th>
+                    <th style="width: 10%;">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for n in penjualan %}
+                <tr>
+                    <td class="small">{{ n.tanggal_transaksi.strftime('%H:%M (%d/%m)') }}</td>
+                    <td class="text-start ps-4 fw-bold">{{ n.produk.nama }}</td>
+                    <td>{{ n.jumlah_ls }} LS + {{ n.jumlah_pcs }} PCS</td>
+                    <td class="fw-bold">Rp {{ "{:,.0f}".format(n.harga_jual) }}</td>
+                    <td><a href="/hapus_penjualan/{{ n.id }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Batal?')">X</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

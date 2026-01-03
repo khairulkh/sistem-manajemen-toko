@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row text-uppercase">
+    <div class="col-md-4 mb-4">
+        <div class="card p-3 shadow-sm border-0">
+            <h5 class="fw-bold text-danger"><i class="bi bi-plus-circle"></i> TAMBAH PENGELUARAN</h5>
+            <hr>
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="small fw-bold">NAMA PENGELUARAN / KETERANGAN</label>
+                    <input type="text" name="nama_pengeluaran" class="form-control" required placeholder="CONTOH: BAYAR LISTRIK">
+                </div>
+                <div class="mb-3">
+                    <label class="small fw-bold">JUMLAH BIAYA (RP)</label>
+                    <input type="number" name="jumlah_biaya" class="form-control" required placeholder="0">
+                </div>
+                <button type="submit" class="btn btn-danger w-100 fw-bold">SIMPAN PENGELUARAN</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card p-3 shadow-sm border-0 bg-dark text-white mb-3 text-center">
+            <h6 class="mb-1 text-warning">TOTAL SELURUH PENGELUARAN</h6>
+            <h2 class="fw-bold">Rp {{ "{:,.0f}".format(total_biaya) }}</h2>
+        </div>
+        
+        <div class="card shadow-sm border-0 p-3">
+            <table class="table table-hover align-middle">
+                <thead class="table-danger text-center">
+                    <tr>
+                        <th width="20%">TANGGAL</th>
+                        <th class="text-start">KETERANGAN</th>
+                        <th width="30%">JUMLAH</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for e in pengeluaran %}
+                    <tr>
+                        <td class="text-center small">{{ e.tanggal.strftime('%d/%m/%Y') }}</td>
+                        <td class="text-start">{{ e.nama_pengeluaran }}</td>
+                        <td class="text-end fw-bold">Rp {{ "{:,.0f}".format(e.jumlah_biaya) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
